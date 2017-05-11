@@ -1866,7 +1866,7 @@ public class SubstanceCoreUtilities {
 		}
 	}
 
-	private static boolean disableThreadCheck = Boolean.getBoolean("substance.disable.thread.check");
+	public static boolean disableThreadCheck = Boolean.getBoolean("substance.disable.thread.check");
 	/**
 	 * Tests UI threading violations on creating the specified component.
 	 * 

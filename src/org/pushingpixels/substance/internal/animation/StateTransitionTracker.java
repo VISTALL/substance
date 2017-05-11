@@ -29,20 +29,11 @@
  */
 package org.pushingpixels.substance.internal.animation;
 
-import java.awt.Container;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.tree.TreeCellRenderer;
-
 import org.pushingpixels.lafwidget.animation.AnimationConfigurationManager;
 import org.pushingpixels.lafwidget.animation.AnimationFacet;
-import org.pushingpixels.substance.api.*;
+import org.pushingpixels.substance.api.ComponentState;
+import org.pushingpixels.substance.api.ComponentStateFacet;
+import org.pushingpixels.substance.api.UiThreadingViolationException;
 import org.pushingpixels.substance.api.renderers.SubstanceRenderer;
 import org.pushingpixels.substance.internal.utils.SubstanceCoreUtilities;
 import org.pushingpixels.trident.Timeline;
@@ -51,6 +42,18 @@ import org.pushingpixels.trident.Timeline.TimelineState;
 import org.pushingpixels.trident.callback.TimelineCallback;
 import org.pushingpixels.trident.callback.TimelineCallbackAdapter;
 import org.pushingpixels.trident.swing.SwingRepaintCallback;
+
+import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.EventListenerList;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.tree.TreeCellRenderer;
+import java.awt.*;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.util.HashMap;
+import java.util.Map;
 
 public class StateTransitionTracker {
 	public static interface RepaintCallback {
@@ -160,7 +163,7 @@ public class StateTransitionTracker {
 		}
 
 		void clear() {
-			if (!SwingUtilities.isEventDispatchThread()) {
+			if (!SwingUtilities.isEventDispatchThread() && !SubstanceCoreUtilities.disableThreadCheck) {
 				UiThreadingViolationException uiThreadingViolationError = new UiThreadingViolationException(
 						"State tracking must be done on Event Dispatch Thread");
 				uiThreadingViolationError.printStackTrace(System.err);
